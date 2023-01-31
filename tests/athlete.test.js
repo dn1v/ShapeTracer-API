@@ -3,6 +3,7 @@ const app = require('../src/app')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const Athlete = require('../src/models/athlete')
+const { Attachment } = require('@sendgrid/helpers/classes')
 
 const userId = new mongoose.Types.ObjectId()
 
@@ -82,3 +83,12 @@ test('Should not delete unautheticated athlete account', async () => {
         .send()
         .expect(401)
 })
+
+test('Should upload avatar image', async () => {
+    await request(app)
+        .post('/athletes/me/profilePic')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .attach('photo', 'tests/fixtures/GitHub-Mark.png')
+        .expect(200)
+})
+
