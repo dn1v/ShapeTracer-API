@@ -1,27 +1,10 @@
 const request = require('supertest')
 const app = require('../src/app')
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const Athlete = require('../src/models/athlete')
-const { Attachment } = require('@sendgrid/helpers/classes')
+const {userId, user, setupDB} = require('./fixtures/db')
 
-const userId = new mongoose.Types.ObjectId()
 
-const user = {
-    _id: userId,
-    firstName: "Pera",
-    lastName: 'Peric',
-    email: "pera.peric@gmail.com",
-    password: 'peraperic',
-    tokens: [{
-        token: jwt.sign({_id: userId, }, process.env.JWT_SECRET)
-    }]
-}
-
-beforeEach(async () => {
-    await Athlete.deleteMany()
-    await new Athlete(user).save()
-})
+beforeEach(setupDB)
 
 test('Should signup a new athlete', async () => {
    const response = await request(app)
@@ -35,6 +18,10 @@ test('Should signup a new athlete', async () => {
         email: 'zikic.zika@gmail.com',
         password: 'zikazikic'
     }).expect(201)
+ 
+    const athlete = await Athlete.findById(response.body.athlete._id)
+    expect(athlete).not.toBeNull()
+
 })
 
 test('Should login existing athlete.', async () => {
@@ -75,6 +62,9 @@ test('Should delete athlete account', async () => {
         .set('Authorization', `Bearer ${user.tokens[0].token}`)
         .send()
         .expect(200)
+
+    const ath = await Athlete.findById(userId)
+    expect(ath).toBeNull()
 })
 
 test('Should not delete unautheticated athlete account', async () => {
@@ -90,5 +80,29 @@ test('Should upload avatar image', async () => {
         .set('Authorization', `Bearer ${user.tokens[0].token}`)
         .attach('photo', 'tests/fixtures/GitHub-Mark.png')
         .expect(200)
+
+    const ath = await Athlete.findById(userId)
+    expect(ath.profilePhoto).toEqual(expect.any(Buffer))
 })
 
+test('Should update valid athlete fields', async () => {
+    await request(app)
+        .patch('/athletes/me')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .send({
+            firstName: 'Mika'
+        }).expect(200)
+
+    const ath = await Athlete.findById(userId)
+    
+    expect(ath.firstName).toEqual('Mika')
+})
+
+test('Should not update invalid fields', async () => {
+    await request(app)
+        .patch('/athletes/me')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .send({
+            location: 'somewhere'
+        }).expect(400)
+})
