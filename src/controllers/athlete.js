@@ -8,9 +8,11 @@ exports.createAthlete = async (req, res) => {
     const athlete = new Athlete(req.body)
 
     try {
+        const exist = await Athlete.findOne(req.email)
+        if (exist) return res.sendStatus(400)
         const token = await athlete.generateToken()
         await athlete.save()
-        welcomeEmail(athlete.email, athlete.firstName)
+        //welcomeEmail(athlete.email, athlete.firstName)
         res.status(201).send({ athlete, token })
     } catch (e) {
         res.status(400).send(e)
@@ -95,7 +97,7 @@ exports.deleteAthlete = async (req, res) => {
 
     try {
         await req.athlete.remove()
-        cancelationEmail(req.athlete.email, req.athlete.firstName)
+       // cancelationEmail(req.athlete.email, req.athlete.firstName)
         res.send(req.athlete)
     } catch (e) {
         res.status(500).send(e)
