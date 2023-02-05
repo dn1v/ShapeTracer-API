@@ -8,8 +8,9 @@ exports.createAthlete = async (req, res) => {
     const athlete = new Athlete(req.body)
 
     try {
-        const exist = await Athlete.findOne(req.email)
-        if (exist) return res.sendStatus(400)
+        // const exist = await Athlete.findOne(req.body.email)
+        // console.log(exist.email)
+        // if (exist.email) return res.sendStatus(400)
         const token = await athlete.generateToken()
         await athlete.save()
         //welcomeEmail(athlete.email, athlete.firstName)
