@@ -23,10 +23,12 @@ exports.createOne = async (req, res) => {
 exports.readMany = async (req, res) => {
 
     const match = req.match
+    const options = req.options
     try {
         await req.athlete.populate({
             path: 'bodyMeasurements',
-            match
+            match,
+            options
         })
         res.send(req.athlete.bodyMeasurements)
 
