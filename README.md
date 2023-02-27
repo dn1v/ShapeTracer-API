@@ -42,7 +42,7 @@ npm start
 ```
 ## Usage
 
-Once the application is running, you can access it by navigating to http://localhost:<port number> in your web browser. From there, you can create an account, log in, and begin tracking your body measurements.
+Once the application is running, you can access it by navigating to http://localhost:<port number> in your web browser. 
 
 # Testing
 
