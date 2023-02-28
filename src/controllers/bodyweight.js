@@ -18,12 +18,15 @@ exports.createBodyweight = async (req, res) => {
 exports.readBodyweights = async (req, res) => {
 
     const match = req.match
+    const options = req.options
     try {
         await req.athlete.populate({
             path: 'bodyweight',
-            match
+            match,
+            options
         })
-        req.athlete.bodyweight.length === 0 ? res.sendStatus(404) : res.send(req.athlete.bodyweight)
+
+        res.send(req.athlete.bodyweight)
     } catch (e) {
         res.status(500).send(e)
     }
