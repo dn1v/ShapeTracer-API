@@ -4,7 +4,7 @@ const properties = {
     type: Number,
     min: 0,
     max: 4,
-    required: true
+    required: false
 };
 
 const moodStatePoperties = {
@@ -47,6 +47,8 @@ const pomsSchema = new mongoose.Schema({
     confusionMoodState: moodStatePoperties,
     angerMoodState: moodStatePoperties,
     totalMoodScore: moodStatePoperties
+},{
+    timestamps: true
 });
 
 pomsSchema.pre('save', function (next) {

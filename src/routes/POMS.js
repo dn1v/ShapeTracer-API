@@ -5,10 +5,10 @@ const auth = require('../middleware/authentication')
 const queryFilter = require('../middleware/queryFilter')
 const pagAndSort = require('../middleware/querySortingAndPagination')
 
-router.post('/pomsOne', auth, controllerPOMS.createPOMS)
-      .get('/pomsMany', auth, queryFilter, pagAndSort, controllerPOMS.readManyPOMS)
-      .get('/pomsOne/:id', auth, controllerPOMS.readPOMS)
-      .patch('/pomsOne/:id', auth, controllerPOMS.updatePOMS)
-      .delete('/pomsOne/:id', auth, controllerPOMS.deletePOMS);
+router.post('/poms', auth, controllerPOMS.createPOMS)
+      .get('/poms', auth, queryFilter, pagAndSort, controllerPOMS.readManyPOMS)
+      .get('/poms/:id', auth, controllerPOMS.readPOMS)
+      .patch('/poms/:id', auth, controllerPOMS.updatePOMS)
+      .delete('/poms/:id', auth, controllerPOMS.deletePOMS);
 
 module.exports = router

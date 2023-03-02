@@ -18,8 +18,15 @@ exports.createPOMS = async (req, res) => {
 
 exports.readManyPOMS = async (req, res) => {
 
+    let options = req.options
+    let match = req.match
+
     try {
-        await req.athlete.populate('pomsQ')
+        await req.athlete.populate({
+            path: 'pomsQ',
+            match,
+            options
+        })
         res.send(req.athlete.pomsQ)
     } catch (e) {
         res.status(500).send(e)
